@@ -20,6 +20,8 @@ module Examples::Annotations
 
     def initialize
       super('Annotations')
+
+      @annotations = []
     end
 
     def activate
@@ -41,10 +43,22 @@ module Examples::Annotations
       reset(view.model)
     end
 
+
+    DICTIONARY_NAME = 'ex_annotations'
+    VIEW_ANNOTATIONS = 'view_annotations'
+    MODEL_ANNOTATIONS = 'model_annotations'
+
     # @param [Sketchup::View] view
     def draw(view)
-      draw_frame(view) if @display_info
+      view.model.pages.each { |page|
+        view_data = page.get_attribute(DICTIONARY_NAME, VIEW_ANNOTATIONS, [])
+        # draw_view_annotations(view, view_data)
+
+        model_data = page.get_attribute(DICTIONARY_NAME, MODEL_ANNOTATIONS, [])
+        # draw_model_annotations(view, model_data)
+      }
     end
+
 
     # @param [Sketchup::Model] model
     def onOpenModel(model)
