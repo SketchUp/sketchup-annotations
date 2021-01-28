@@ -1,6 +1,7 @@
 require 'sketchup.rb'
 
 require 'ex_annotations/constants/view'
+require 'ex_annotations/annotation_manager'
 require 'ex_annotations/drawing_helper'
 
 module Examples::Annotations
@@ -20,8 +21,6 @@ module Examples::Annotations
 
     def initialize
       super('Annotations')
-
-      @annotations = []
     end
 
     def activate
@@ -50,12 +49,18 @@ module Examples::Annotations
 
     # @param [Sketchup::View] view
     def draw(view)
-      view.model.pages.each { |page|
-        view_data = page.get_attribute(DICTIONARY_NAME, VIEW_ANNOTATIONS, [])
-        # draw_view_annotations(view, view_data)
-
-        model_data = page.get_attribute(DICTIONARY_NAME, MODEL_ANNOTATIONS, [])
-        # draw_model_annotations(view, model_data)
+      view.line_stipple = ''
+      annotations = AnnotationManager.load(view.model.pages.selected_page)
+      annotations.each { |type, list|
+        list.each { |color, line_width, points|
+          view.drawing_color = color
+          view.line_width = line_width
+          if type == :annotate2d # KLUDGE
+            view.draw2d(GL_LINE_STRIP, points)
+          else
+            view.draw(GL_LINE_STRIP, points)
+          end
+        }
       }
     end
 
@@ -63,7 +68,7 @@ module Examples::Annotations
     # @param [Sketchup::Model] model
     def onOpenModel(model)
       puts "onOpenModel (#{self.class.name})"
-      update_info(model)
+      reset(model)
     end
 
     # @param [Sketchup::Model] model
@@ -82,12 +87,6 @@ module Examples::Annotations
 
     def reset(model)
       puts "reset (#{self.class.name})"
-      # @model_info = {}
-      # @display_info = false
-
-      # @button_points = nil
-      # @button_hover = false
-      # @button_pressed = false
 
       # model.tools.remove_observer(self)
 
