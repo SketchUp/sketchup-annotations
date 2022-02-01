@@ -19,8 +19,12 @@ module Examples::Annotations
     include DrawingHelper
     include ViewConstants
 
+    attr_reader :service_id, :name
+
     def initialize
-      super('Annotations')
+      super
+      @service_id = 'thomthom.annotations'.freeze
+      @name = 'Annotations'.freeze
     end
 
     def activate

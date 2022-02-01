@@ -3,12 +3,10 @@ module Examples::Annotations
   # Shim for testing in older SU versions as a tool.
   class MockService
 
-    attr_reader :id, :name
     attr_writer :enabled
 
-    def initialize(name)
-      @id = name
-      @name = name
+    def initialize
+      @enabled = false
     end
 
     def enabled?
