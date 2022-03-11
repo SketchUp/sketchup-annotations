@@ -38,7 +38,10 @@ module Examples::Annotations
 
     # @param [Sketchup::View] view
     def onLButtonDown(flags, x, y, view)
-      raise "no active page to annotate" if view.model.pages.selected_page.nil?
+      if view.model.pages.selected_page.nil?
+        UI.messagebox("Create a Scene to start annotating.")
+        return
+      end
 
       collect_input_point(flags, x, y, view)
       @annotating = true
@@ -47,6 +50,8 @@ module Examples::Annotations
 
     # @param [Sketchup::View] view
     def onLButtonUp(flags, x, y, view)
+      return if view.model.pages.selected_page.nil?
+
       collect_input_point(flags, x, y, view)
       page = view.model.pages.selected_page
       AnnotationManager.store(page, annotation_type, @points, @line_width, @color)
