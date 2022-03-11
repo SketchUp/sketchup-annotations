@@ -10,7 +10,7 @@ require 'sketchup.rb'
 require 'ex_annotations/tools/model_annotation'
 require 'ex_annotations/tools/screen_annotation'
 require 'ex_annotations/annotation_manager'
-require 'ex_annotations/service'
+require 'ex_annotations/overlay'
 
 module Examples::Annotations
 

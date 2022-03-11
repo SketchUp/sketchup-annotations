@@ -6,24 +6,24 @@ require 'ex_annotations/drawing_helper'
 
 module Examples::Annotations
 
-  MODEL_SERVICE = if defined?(Sketchup::ModelService)
-    Sketchup::ModelService
+  OVERLAY = if defined?(Sketchup::Overlay)
+    Sketchup::Overlay
   else
-    require 'ex_annotations/mock_service'
-    MockService
+    require 'ex_annotations/mock_overlay'
+    MockOverlay
   end
 
 
-  class AnnotationService < MODEL_SERVICE
+  class AnnotationOverlay < OVERLAY
 
     include DrawingHelper
     include ViewConstants
 
-    attr_reader :service_id, :name
+    attr_reader :overlay_id, :name
 
     def initialize
       super
-      @service_id = 'thomthom.annotations'.freeze
+      @overlay_id = 'thomthom.annotations'.freeze
       @name = 'Annotations'.freeze
     end
 
@@ -98,7 +98,7 @@ module Examples::Annotations
     end
 
     def start_observing_app
-      # TODO: Need to figure out how model services works with Mac's MDI.
+      # TODO: Need to figure out how model overlays works with Mac's MDI.
       return unless Sketchup.platform == :platform_win
       Sketchup.remove_observer(self)
       Sketchup.add_observer(self)
@@ -112,33 +112,33 @@ module Examples::Annotations
   end
 
 
-  # Examples::Annotations.service
-  def self.service
-    @service
+  # Examples::Annotations.overlay
+  def self.overlay
+    @overlay
   end
 
-  def self.start_service
-    unless defined?(Sketchup::ModelService)
-      warn 'ModelService not supported by this SketchUp version.'
+  def self.start_overlay
+    unless defined?(Sketchup::Overlay)
+      warn 'Overlay not supported by this SketchUp version.'
       return
     end
 
     model = Sketchup.active_model
-    @service = AnnotationService.new
-    model.services.remove(@service) if @service
-    model.services.add(@service)
-    @service
+    @overlay = AnnotationOverlay.new
+    model.overlays.remove(@overlay) if @overlay
+    model.overlays.add(@overlay)
+    @overlay
   end
 
-  def self.start_service_as_tool
-    service = AnnotationService.new
+  def self.start_overlay_as_tool
+    overlay = AnnotationOverlay.new
     model = Sketchup.active_model
-    model.select_tool(service)
-    service
+    model.select_tool(overlay)
+    overlay
   end
 
   unless file_loaded?(__FILE__)
-    self.start_service
+    self.start_overlay
     file_loaded( __FILE__ )
   end
 
