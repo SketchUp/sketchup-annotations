@@ -43,7 +43,7 @@ module Examples::Annotations
     def stop(view)
       puts "stop (#{self.class.name})"
       stop_observing_app
-      reset(view.model)
+      reset(view&.model || Sketchup.active_model)
     end
 
 
