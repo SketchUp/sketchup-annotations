@@ -94,7 +94,7 @@ module Examples::Annotations
 
       # model.tools.remove_observer(self)
 
-      model.active_view.invalidate
+      # model.active_view.invalidate
     end
 
     def start_observing_app
@@ -124,8 +124,8 @@ module Examples::Annotations
     end
 
     model = Sketchup.active_model
-    @overlay = AnnotationOverlay.new
     model.overlays.remove(@overlay) if @overlay
+    @overlay = AnnotationOverlay.new
     model.overlays.add(@overlay)
     @overlay
   end
