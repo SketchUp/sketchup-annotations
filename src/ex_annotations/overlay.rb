@@ -111,23 +111,31 @@ module Examples::Annotations
 
   end
 
+  class AppObserver < Sketchup::AppObserver
 
-  # Examples::Annotations.overlay
-  def self.overlay
-    @overlay
+    def expectsStartupModelNotifications
+      true
+    end
+
+    def register_overlay(model)
+      @@overlays ||= {}
+      overlay = AnnotationOverlay.new
+      model.overlays.add(overlay)
+      @@overlays[model] = overlay
+    end
+    alias_method :onNewModel, :register_overlay
+    alias_method :onOpenModel, :register_overlay
+
   end
 
-  def self.start_overlay
+  def self.start_app_observer
     unless defined?(Sketchup::Overlay)
       warn 'Overlay not supported by this SketchUp version.'
       return
     end
 
-    model = Sketchup.active_model
-    model.overlays.remove(@overlay) if @overlay
-    @overlay = AnnotationOverlay.new
-    model.overlays.add(@overlay)
-    @overlay
+    observer = AppObserver.new
+    Sketchup.add_observer(observer)
   end
 
   def self.start_overlay_as_tool
@@ -138,7 +146,7 @@ module Examples::Annotations
   end
 
   unless file_loaded?(__FILE__)
-    self.start_overlay
+    self.start_app_observer
     file_loaded( __FILE__ )
   end
 
