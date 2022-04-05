@@ -118,10 +118,8 @@ module Examples::Annotations
     end
 
     def register_overlay(model)
-      @@overlays ||= {}
       overlay = AnnotationOverlay.new
       model.overlays.add(overlay)
-      @@overlays[model] = overlay
     end
     alias_method :onNewModel, :register_overlay
     alias_method :onOpenModel, :register_overlay
