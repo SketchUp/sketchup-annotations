@@ -21,13 +21,42 @@ module Examples::Annotations
   end
 
   def self.activate_screen_annotations
+    return if !self.activate_tool_checks
+
     tool = ScreenAnnotationTool.new
     Sketchup.active_model.select_tool(tool)
   end
 
   def self.activate_model_annotations
+    return if !self.activate_tool_checks
+
     tool = ModelAnnotationTool.new
     Sketchup.active_model.select_tool(tool)
+  end
+
+  def self.activate_tool_checks
+    model = Sketchup.active_model
+    if model.nil?
+      message = 'There must be an active model to start annotating.'
+      UI.messagebox(message)
+      return false
+    end
+
+    overlay = model.overlays.find { |overlay|
+      overlay.overlay_id == AnnotationOverlay::OVERLAY_ID
+    }
+    if overlay.nil?
+      message = 'Unexpected error. Annotation Overlay not registered.'
+      UI.messagebox(message)
+      return false
+    end
+    if !overlay.enabled?
+      message = 'Enable the Annotations Overlay to start annotating.'
+      UI.messagebox(message)
+      return false
+    end
+
+    true
   end
 
   # @note Debug method to reload the plugin.

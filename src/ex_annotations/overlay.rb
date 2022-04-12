@@ -16,6 +16,8 @@ module Examples::Annotations
 
   class AnnotationOverlay < OVERLAY
 
+    OVERLAY_ID = 'thomthom.annotations'.freeze
+
     include DrawingHelper
     include ViewConstants
 
@@ -23,7 +25,7 @@ module Examples::Annotations
 
     def initialize
       super
-      @overlay_id = 'thomthom.annotations'.freeze
+      @overlay_id = OVERLAY_ID
       @name = 'Annotations'.freeze
     end
 
