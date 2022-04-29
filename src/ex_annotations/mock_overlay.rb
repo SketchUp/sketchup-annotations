@@ -3,9 +3,12 @@ module Examples::Annotations
   # Shim for testing in older SU versions as a tool.
   class MockOverlay
 
+    attr_reader :id, :name
     attr_writer :enabled
 
-    def initialize
+    def initialize(id, name)
+      @id = id
+      @name = name
       @enabled = false
     end
 
@@ -16,14 +19,14 @@ module Examples::Annotations
     def activate
       @enabled = true
       view = Sketchup.active_model.active_view
-      start(view)
+      start
       view.invalidate
     end
 
     # @param [Sketchup::View] view
     def deactivate(view)
       @enabled = false
-      stop(view)
+      stop
       view.invalidate
     end
 
@@ -37,10 +40,10 @@ module Examples::Annotations
       view.invalidate
     end
 
-    def start(view)
+    def start
     end
 
-    def stop(view)
+    def stop
     end
 
   end

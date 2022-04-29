@@ -21,12 +21,8 @@ module Examples::Annotations
     include DrawingHelper
     include ViewConstants
 
-    attr_reader :overlay_id, :name
-
     def initialize
-      super
-      @overlay_id = OVERLAY_ID
-      @name = 'Annotations'.freeze
+      super(OVERLAY_ID, 'Annotations')
     end
 
     def activate
@@ -35,17 +31,15 @@ module Examples::Annotations
     end
 
 
-    # @param [Sketchup::View] view
-    def start(view)
+    def start
       puts "start (#{self.class.name})"
       start_observing_app
     end
 
-    # @param [Sketchup::View] view
-    def stop(view)
+    def stop
       puts "stop (#{self.class.name})"
       stop_observing_app
-      reset(view&.model || Sketchup.active_model)
+      reset(Sketchup.active_model)
     end
 
 
