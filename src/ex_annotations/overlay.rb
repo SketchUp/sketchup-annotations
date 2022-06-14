@@ -22,7 +22,8 @@ module Examples::Annotations
     include ViewConstants
 
     def initialize
-      super(OVERLAY_ID, 'Annotations')
+      description = 'Annotate in screen or model space.'
+      super(OVERLAY_ID, 'Annotations', description: description)
     end
 
     def activate
