@@ -6,15 +6,7 @@ require 'su_annotations/drawing_helper'
 
 module Trimble::Annotations
 
-  OVERLAY = if defined?(Sketchup::Overlay)
-    Sketchup::Overlay
-  else
-    require 'su_annotations/mock_overlay'
-    MockOverlay
-  end
-
-
-  class AnnotationOverlay < OVERLAY
+  class AnnotationOverlay < Sketchup::Overlay
 
     OVERLAY_ID = 'thomthom.annotations'.freeze
 
@@ -33,12 +25,10 @@ module Trimble::Annotations
 
 
     def start
-      puts "start (#{self.class.name})"
       start_observing_app
     end
 
     def stop
-      puts "stop (#{self.class.name})"
       stop_observing_app
       reset(Sketchup.active_model)
     end
@@ -68,13 +58,11 @@ module Trimble::Annotations
 
     # @param [Sketchup::Model] model
     def onOpenModel(model)
-      puts "onOpenModel (#{self.class.name})"
       reset(model)
     end
 
     # @param [Sketchup::Model] model
     def onNewModel(model)
-      puts "onNewModel (#{self.class.name})"
       reset(model)
     end
 
@@ -87,7 +75,7 @@ module Trimble::Annotations
     private
 
     def reset(model)
-      puts "reset (#{self.class.name})"
+      # puts "reset (#{self.class.name})"
 
       # model.tools.remove_observer(self)
 
@@ -95,18 +83,15 @@ module Trimble::Annotations
     end
 
     def start_observing_app
-      # TODO: Need to figure out how model overlays works with Mac's MDI.
-      return unless Sketchup.platform == :platform_win
       Sketchup.remove_observer(self)
       Sketchup.add_observer(self)
     end
 
     def stop_observing_app
-      return unless Sketchup.platform == :platform_win
       Sketchup.remove_observer(self)
     end
 
-  end
+  end if defined?(Sketchup::Overlay)
 
   class AppObserver < Sketchup::AppObserver
 
@@ -116,7 +101,12 @@ module Trimble::Annotations
 
     def register_overlay(model)
       overlay = AnnotationOverlay.new
-      model.overlays.add(overlay)
+      begin
+        model.overlays.add(overlay)
+      rescue ArgumentError => error
+        # If the overlay was already registerred.
+        warn error
+      end
     end
     alias_method :onNewModel, :register_overlay
     alias_method :onOpenModel, :register_overlay
@@ -131,13 +121,11 @@ module Trimble::Annotations
 
     observer = AppObserver.new
     Sketchup.add_observer(observer)
-  end
 
-  def self.start_overlay_as_tool
-    overlay = AnnotationOverlay.new
+    # In the case of installing or enabling the extension we need to
+    # register the overlay.
     model = Sketchup.active_model
-    model.select_tool(overlay)
-    overlay
+    observer.register_overlay(model) if model
   end
 
   unless file_loaded?(__FILE__)

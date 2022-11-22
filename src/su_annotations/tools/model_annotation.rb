@@ -1,7 +1,7 @@
 require 'su_annotations/tools/iannotation'
 
 module Trimble::Annotations
-  class ModelAnnotationTool < IAnnotationTool
+  class ModelAnnotationTool < IAnnotationTool # rubocop:disable SketchupSuggestions/ToolInvalidate
 
     # @param [Sketchup::View] view
     def getExtents

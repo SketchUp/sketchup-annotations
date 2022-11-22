@@ -9,7 +9,6 @@ module Trimble::Annotations
     # @param [Integer] line_width
     # @param [Sketchup::Color] color
     def self.store(page, type, points, line_width, color)
-      puts "Store annotation (#{points.size} points)"
       data = [color, line_width, points]
       list = page.get_attribute(DICTIONARY_NAME, type, [])
       list << data

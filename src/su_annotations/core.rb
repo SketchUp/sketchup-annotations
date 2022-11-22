@@ -1,10 +1,3 @@
-#-------------------------------------------------------------------------------
-#
-# Thomas Thomassen
-# thomas[at]thomthom[dot]net
-#
-#-------------------------------------------------------------------------------
-
 require 'sketchup.rb'
 
 require 'su_annotations/tools/model_annotation'
@@ -35,6 +28,12 @@ module Trimble::Annotations
   end
 
   def self.activate_tool_checks
+    unless defined?(Sketchup::Overlay)
+      message = "This version of SketchUp doesn't support overlays."
+      UI.messagebox(message)
+      return false
+    end
+
     model = Sketchup.active_model
     if model.nil?
       message = 'There must be an active model to start annotating.'
@@ -51,6 +50,8 @@ module Trimble::Annotations
       return false
     end
     if !overlay.enabled?
+      UI.show_inspector("Overlays")
+
       message = 'Enable the Annotations Overlay to start annotating.'
       UI.messagebox(message)
       return false
