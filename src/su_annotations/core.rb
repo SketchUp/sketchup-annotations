@@ -7,10 +7,37 @@ require 'su_annotations/overlay'
 
 module Trimble::Annotations
 
-  unless file_loaded?( __FILE__ )
+  ICON_EXT = Sketchup.platform == :platform_win ? 'svg' : 'pdf'
+
+  def self.icon(basename)
+    File.join(PATH, 'icons', "#{basename}.#{ICON_EXT}")
+  end
+
+  unless file_loaded?(__FILE__)
+    icon_path = File.join(PATH)
+
+    cmd = UI::Command.new('Screen Annotations') { self.activate_screen_annotations }
+    cmd.tooltip = 'Annotate scene in 2D space.'
+    cmd.status_bar_text = 'Draw 2D annotations for the currently active scene.'
+    cmd.large_icon = self.icon('tb_2d_annotations')
+    cmd.small_icon = self.icon('tb_2d_annotations')
+    cmd_screen_annotations = cmd
+
+    cmd = UI::Command.new('Model Annotations') { self.activate_model_annotations }
+    cmd.tooltip = 'Annotate scene in 3D space.'
+    cmd.status_bar_text = 'Draw 3D annotations for the currently active scene.'
+    cmd.large_icon = self.icon('tb_3d_annotations')
+    cmd.small_icon = self.icon('tb_3d_annotations')
+    cmd_model_annotations = cmd
+
     menu = UI.menu('Draw').add_submenu('Annotations')
-    menu.add_item('Screen Annotations') { self.activate_screen_annotations }
-    menu.add_item('Model Annotations') { self.activate_model_annotations }
+    menu.add_item(cmd_screen_annotations)
+    menu.add_item(cmd_model_annotations)
+
+    toolbar = UI::Toolbar.new('Annotations')
+    toolbar.add_item(cmd_screen_annotations)
+    toolbar.add_item(cmd_model_annotations)
+    toolbar.restore
   end
 
   def self.activate_screen_annotations
@@ -84,4 +111,4 @@ module Trimble::Annotations
 
 end # module
 
-file_loaded( __FILE__ )
+file_loaded(__FILE__)

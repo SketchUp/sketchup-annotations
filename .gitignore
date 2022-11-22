@@ -1,7 +1,6 @@
 *.sublime-*
 archive/*
 docs/*
-media/*
 models/*
 
 # Backup files
