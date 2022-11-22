@@ -18,12 +18,12 @@ AllCops:
   - src/*/vendor/**/* # Exclude skippy vendor folder
   SketchUp:
     SourcePath: src
-    TargetSketchUpVersion: 2021
+    TargetSketchUpVersion: 2022 # TODO: Should be 2023
     Exclude: # Exclude common folders.
     - profiling/
     - skippy/
     - tests/
-  TargetRubyVersion: 2.5 # Should have been 2.0 but RuboCop dropped support.
+  TargetRubyVersion: 2.7
 
 
 # If DisabledByDefault is set to true then we need to enable the SketchUp
@@ -43,3 +43,7 @@ SketchupSuggestions:
 
 SketchupBugs:
   Enabled: true
+
+
+SketchupRequirements/ShippedExtensionsNamespace:
+  Enabled: false # We are Trimble!
