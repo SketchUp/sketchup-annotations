@@ -4,25 +4,30 @@ require 'extensions.rb'
 module Trimble
   module Annotations
 
-  PLUGIN_ID       = 'su_annotations'.freeze
-  PLUGIN_NAME     = 'SketchUp Annotations'.freeze
-  PLUGIN_VERSION  = '1.0.0'.freeze
+  file = __FILE__.dup
+  # Account for Ruby encoding bug under Windows.
+  file.force_encoding('UTF-8') if file.respond_to?(:force_encoding)
+  # Support folder should be named the same as the root .rb file.
+  folder_name = File.basename(file, '.*')
 
-  FILENAMESPACE = File.basename( __FILE__, '.rb' )
-  PATH_ROOT     = File.dirname( __FILE__ ).freeze
-  PATH          = File.join( PATH_ROOT, FILENAMESPACE ).freeze
+  PATH_ROOT     = File.dirname(file).freeze
+  PATH          = File.join(PATH_ROOT, folder_name).freeze
 
-  unless file_loaded?( __FILE__ )
-    loader = File.join( PATH, 'core.rb' )
-    ex = SketchupExtension.new( PLUGIN_NAME, loader )
+  EXTENSION_ID       = 'su_annotations'.freeze
+  EXTENSION_NAME     = 'SketchUp Annotations'.freeze
+  EXTENSION_VERSION  = '1.0.0'.freeze
+
+  unless file_loaded?(__FILE__)
+    loader = File.join(PATH, 'core.rb')
+    ex = SketchupExtension.new(EXTENSION_NAME, loader)
     ex.description = 'Model annotations.'
-    ex.version     = PLUGIN_VERSION
+    ex.version     = EXTENSION_VERSION
     ex.copyright   = 'Trimble Inc © 2022'
     ex.creator     = 'SketchUp Team'
-    Sketchup.register_extension( ex, true )
+    Sketchup.register_extension(ex, true)
   end
 
   end # module Annotations
 end # module Trimble
 
-file_loaded( __FILE__ )
+file_loaded(__FILE__)
