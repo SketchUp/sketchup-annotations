@@ -1,6 +1,6 @@
-require 'ex_annotations/annotation_manager'
+require 'su_annotations/annotation_manager'
 
-module Examples::Annotations
+module Trimble::Annotations
   class IAnnotationTool
 
     def initialize

@@ -1,15 +1,15 @@
 require 'sketchup.rb'
 
-require 'ex_annotations/constants/view'
-require 'ex_annotations/annotation_manager'
-require 'ex_annotations/drawing_helper'
+require 'su_annotations/constants/view'
+require 'su_annotations/annotation_manager'
+require 'su_annotations/drawing_helper'
 
-module Examples::Annotations
+module Trimble::Annotations
 
   OVERLAY = if defined?(Sketchup::Overlay)
     Sketchup::Overlay
   else
-    require 'ex_annotations/mock_overlay'
+    require 'su_annotations/mock_overlay'
     MockOverlay
   end
 
@@ -44,7 +44,7 @@ module Examples::Annotations
     end
 
 
-    DICTIONARY_NAME = 'ex_annotations'
+    DICTIONARY_NAME = 'su_annotations'
     VIEW_ANNOTATIONS = 'view_annotations'
     MODEL_ANNOTATIONS = 'model_annotations'
 

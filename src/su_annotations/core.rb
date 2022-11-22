@@ -7,12 +7,12 @@
 
 require 'sketchup.rb'
 
-require 'ex_annotations/tools/model_annotation'
-require 'ex_annotations/tools/screen_annotation'
-require 'ex_annotations/annotation_manager'
-require 'ex_annotations/overlay'
+require 'su_annotations/tools/model_annotation'
+require 'su_annotations/tools/screen_annotation'
+require 'su_annotations/annotation_manager'
+require 'su_annotations/overlay'
 
-module Examples::Annotations
+module Trimble::Annotations
 
   unless file_loaded?( __FILE__ )
     menu = UI.menu('Draw').add_submenu('Annotations')
@@ -62,7 +62,7 @@ module Examples::Annotations
   # @note Debug method to reload the plugin.
   #
   # @example
-  #   Examples::Annotations.reload
+  #   Trimble::Annotations.reload
   #
   # @return [Integer] Number of files reloaded.
   def self.reload( tt_lib = false )

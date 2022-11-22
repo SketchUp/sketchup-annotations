@@ -1,7 +1,7 @@
-module Examples::Annotations
+module Trimble::Annotations
   module AnnotationManager
 
-    DICTIONARY_NAME = 'ex_annotations'
+    DICTIONARY_NAME = 'su_annotations'
 
     # @param [Sketchup::Page] page
     # @param [Symbol] type

@@ -1,4 +1,4 @@
-module Examples::Annotations
+module Trimble::Annotations
 
   # Shim for testing in older SU versions as a tool.
   class MockOverlay

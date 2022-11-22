@@ -1,6 +1,6 @@
-require 'ex_annotations/tools/iannotation'
+require 'su_annotations/tools/iannotation'
 
-module Examples::Annotations
+module Trimble::Annotations
   class ScreenAnnotationTool < IAnnotationTool
 
     # @param [Sketchup::View] view

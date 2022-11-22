@@ -1,4 +1,4 @@
-module Examples::Annotations
+module Trimble::Annotations
 module DrawingHelper
 
   # @param [Geom::Point3d] bottom_left
