@@ -66,11 +66,11 @@ module Trimble::Annotations
   #   Trimble::Annotations.reload
   #
   # @return [Integer] Number of files reloaded.
-  def self.reload( tt_lib = false )
+  def self.reload
     original_verbose = $VERBOSE
     $VERBOSE = nil
-    load __FILE__
-    if defined?( PATH ) && File.exist?( PATH )
+    load __FILE__ # rubocop:disable SketchupSuggestions/FileEncoding
+    if defined?(PATH) && File.exist?(PATH)
       x = Dir.glob( File.join(PATH, '**/*.rb') ).each { |file|
         load file
       }
