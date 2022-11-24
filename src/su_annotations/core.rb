@@ -1,5 +1,6 @@
 require 'sketchup.rb'
 
+require 'su_annotations/tools/annotation_eraser'
 require 'su_annotations/tools/model_annotation'
 require 'su_annotations/tools/screen_annotation'
 require 'su_annotations/annotation_manager'
@@ -30,13 +31,24 @@ module Trimble::Annotations
     cmd.small_icon = self.icon('tb_3d_annotations')
     cmd_model_annotations = cmd
 
+    cmd = UI::Command.new('Erase Annotations') { self.activate_annotations_eraser }
+    cmd.tooltip = 'Erase annotations.'
+    cmd.status_bar_text = 'Draw 3D annotations for the currently active scene.'
+    cmd.large_icon = self.icon('tb_eraser')
+    cmd.small_icon = self.icon('tb_eraser')
+    cmd_erase_annotations = cmd
+
     menu = UI.menu('Draw').add_submenu('Annotations')
     menu.add_item(cmd_screen_annotations)
     menu.add_item(cmd_model_annotations)
+    menu.add_separator
+    menu.add_item(cmd_erase_annotations)
 
     toolbar = UI::Toolbar.new('Annotations')
     toolbar.add_item(cmd_screen_annotations)
     toolbar.add_item(cmd_model_annotations)
+    toolbar.add_separator
+    toolbar.add_item(cmd_erase_annotations)
     toolbar.restore
   end
 
@@ -51,6 +63,13 @@ module Trimble::Annotations
     return if !self.activate_tool_checks
 
     tool = ModelAnnotationTool.new
+    Sketchup.active_model.select_tool(tool)
+  end
+
+  def self.activate_annotations_eraser
+    return if !self.activate_tool_checks
+
+    tool = AnnotationEraserTool.new
     Sketchup.active_model.select_tool(tool)
   end
 

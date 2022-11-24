@@ -32,5 +32,16 @@ module Trimble::Annotations
       annotations
     end
 
+    # @param [Sketchup::Page] page
+    # @param [Symbol] type
+    # @param [Integer] index
+    def self.erase_at(page, type, index)
+      list = page.get_attribute(DICTIONARY_NAME, type, [])
+      list.delete_at(index)
+      page.set_attribute(DICTIONARY_NAME, type, list)
+      page.model.active_view.invalidate
+      nil
+    end
+
   end # class
 end # module
