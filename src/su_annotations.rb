@@ -15,7 +15,7 @@ module Trimble
 
   EXTENSION_ID       = 'su_annotations'.freeze
   EXTENSION_NAME     = 'SketchUp Annotations'.freeze
-  EXTENSION_VERSION  = '1.0.0'.freeze
+  EXTENSION_VERSION  = '1.1.0'.freeze
 
   unless file_loaded?(__FILE__)
     loader = File.join(PATH, 'core.rb')
