@@ -1,3 +1,4 @@
+require 'su_annotations/tools/cursor_manager'
 require 'su_annotations/tools/iannotation'
 
 module Trimble::Annotations
@@ -18,6 +19,10 @@ module Trimble::Annotations
       view.line_width = @line_width
       view.drawing_color = @color
       view.draw(GL_LINE_STRIP, @points)
+    end
+
+    def onSetCursor
+      UI.set_cursor(CursorManager.annotate_3d)
     end
 
     private

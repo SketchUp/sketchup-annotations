@@ -1,3 +1,4 @@
+require 'su_annotations/tools/cursor_manager'
 require 'su_annotations/annotation_manager'
 
 module Trimble::Annotations
@@ -97,6 +98,10 @@ module Trimble::Annotations
           end
         }
       }
+    end
+
+    def onSetCursor
+      UI.set_cursor(CursorManager.erase_annotations)
     end
 
     # ModelObserver
