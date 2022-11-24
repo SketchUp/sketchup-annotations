@@ -128,6 +128,11 @@ module Trimble::Annotations
       model.remove_observer(self)
     end
 
+    def picked?(type, index)
+      return false if @curves.nil? || @curves[type].nil? || @curves[type].empty?
+      @curves[type].any? { |data| data[:index] == index }
+    end
+
     # @param [Sketchup::View] view
     def pick_annotation_at(flags, x, y, view)
       screen_point = Geom::Point3d.new(x, y, 0)
@@ -141,6 +146,8 @@ module Trimble::Annotations
         case type
         when :annotate3d
           curves.each_with_index { |data, i|
+            next if picked?(type, i)
+
             color, line_width, points = data # TODO: make reusable utility
             pick = ph.pick_segment(points)
             next unless pick
@@ -150,6 +157,8 @@ module Trimble::Annotations
           }
         when :annotate2d
           curves.each_with_index { |data, i|
+            next if picked?(type, i)
+
             color, line_width, points = data # TODO: make reusable utility
             pick = pick_2d_segment?(screen_point, points)
             next unless pick
