@@ -33,7 +33,7 @@ module Trimble::Annotations
 
     cmd = UI::Command.new('Erase Annotations') { self.activate_annotations_eraser }
     cmd.tooltip = 'Erase annotations.'
-    cmd.status_bar_text = 'Draw 3D annotations for the currently active scene.'
+    cmd.status_bar_text = 'Erase annotations for the currently active scene.'
     cmd.large_icon = self.icon('tb_eraser')
     cmd.small_icon = self.icon('tb_eraser')
     cmd_erase_annotations = cmd
