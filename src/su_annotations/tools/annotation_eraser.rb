@@ -69,6 +69,14 @@ module Trimble::Annotations
       view.invalidate
     end
 
+    # @param [Integer] reason
+    # @param [Sketchup::View] view
+    def onCancel(reason, view)
+      @curves = {}
+      @erasing = false
+      view.invalidate
+    end
+
     # @param [Sketchup::View] view
     def draw(view)
       return if @curves.all?(&:empty?)
