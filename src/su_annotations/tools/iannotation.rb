@@ -53,8 +53,11 @@ module Trimble::Annotations
       return if view.model.pages.selected_page.nil?
 
       collect_input_point(flags, x, y, view)
-      page = view.model.pages.selected_page
+      model = view.model
+      page = model.pages.selected_page
+      model.start_operation('Add Annotation', true)
       AnnotationManager.store(page, annotation_type, @points, @line_width, @color)
+      model.commit_operation
       @annotating = false
       @points.clear
       view.invalidate

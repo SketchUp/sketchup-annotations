@@ -16,11 +16,13 @@ module Trimble::Annotations
     end
 
     def activate
+      add_observers(Sketchup.active_model)
       update_ui
     end
 
     # @param [Sketchup::View] view
     def deactivate(view)
+      remove_observers(view.model)
       view.invalidate
     end
 
@@ -97,7 +99,29 @@ module Trimble::Annotations
       }
     end
 
+    # ModelObserver
+
+    def onTransactionUndo(model)
+      # puts "onTransactionUndo: #{model}"
+      model.active_view.invalidate
+    end
+
+    def onTransactionRedo(model)
+      # puts "onTransactionRedo: #{model}"
+      model.active_view.invalidate
+    end
+
     private
+
+    # @param [Sketchup::Model] model
+    def add_observers(model)
+      remove_observers(model) # Clean up, just in case.
+      model.add_observer(self)
+    end
+
+    def remove_observers(model)
+      model.remove_observer(self)
+    end
 
     # @param [Sketchup::View] view
     def pick_annotation_at(flags, x, y, view)
@@ -154,13 +178,21 @@ module Trimble::Annotations
       pick_annotation_at(flags, x, y, view)
       return if @curves.empty?
 
-      page = view.model.pages.selected_page
+      model = view.model
+      page = model.pages.selected_page
+      indicies = {}
       @curves.each { |type, curves|
+        indicies[type] = []
         curves.each { |data|
-          index = data[:index]
-          AnnotationManager.erase_at(page, type, index)
+          indicies[type] << data[:index]
         }
       }
+
+      model.start_operation('Erase Annotations', true)
+      indicies.each { |type, is|
+        AnnotationManager.erase_at(page, type, is)
+      }
+      model.commit_operation
     end
 
     def erasing?

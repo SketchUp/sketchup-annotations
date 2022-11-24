@@ -34,10 +34,10 @@ module Trimble::Annotations
 
     # @param [Sketchup::Page] page
     # @param [Symbol] type
-    # @param [Integer] index
-    def self.erase_at(page, type, index)
+    # @param [Array<Integer>] indicies
+    def self.erase_at(page, type, indicies)
       list = page.get_attribute(DICTIONARY_NAME, type, [])
-      list.delete_at(index)
+      list = list.reject.with_index { |points, i| indicies.include?(i) }
       page.set_attribute(DICTIONARY_NAME, type, list)
       page.model.active_view.invalidate
       nil
