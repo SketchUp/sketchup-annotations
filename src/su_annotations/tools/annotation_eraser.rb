@@ -94,37 +94,51 @@ module Trimble::Annotations
     # @param [Sketchup::View] view
     def pick_annotation_at(flags, x, y, view)
       screen_point = Geom::Point3d.new(x, y, 0)
-      model_point = pick_model_point(flags, x, y, view)
 
       ph = view.pick_helper
       ph.init(x, y, @aperture)
 
       @annotations.each { |type, curves|
+        pick = nil
+
         case type
         when :annotate3d
-          # erase_3d_at(curves, model_point)
           curves.each_with_index { |data, i|
-            # TODO: make reusable utility
-            color, line_width, points = data
+            color, line_width, points = data # TODO: make reusable utility
             pick = ph.pick_segment(points)
             next unless pick
 
-            @curves[:annotate3d] ||= []
-            @curves[:annotate3d] << { index: i, color: color, line_width: line_width, points: points }
+            @curves[type] ||= []
+            @curves[type] << { index: i, color: color, line_width: line_width, points: points }
           }
         when :annotate2d
-          # erase_2d_at(curves, screen_point)
           curves.each_with_index { |data, i|
-            # TODO: make reusable utility
-            color, line_width, points = data
-            pick = ph.pick_segment(points)
+            color, line_width, points = data # TODO: make reusable utility
+            pick = pick_2d_segment?(screen_point, points)
             next unless pick
 
-            @curves[:annotate2d] ||= []
-            @curves[:annotate2d] << { index: i, color: color, line_width: line_width, points: points }
+            @curves[type] ||= []
+            @curves[type] << { index: i, color: color, line_width: line_width, points: points }
           }
         end
       }
+    end
+
+    # @param [Geom::Point3d] screen_point
+    # @param [Array<Geom::Point3d>] points
+    def pick_2d_segment?(screen_point, points)
+      points.each_cons(2) { |segment|
+        pick_on_segment = screen_point.project_to_line(segment)
+        pt1, pt2 = segment
+        v1 = pick_on_segment.vector_to(pt1)
+        v2 = pick_on_segment.vector_to(pt2)
+        # If vectors are zero length, the projected pick is on the vertex.
+        # If the projected pick on on the segment the vectors should be opposing.
+        if !v1.valid? || !v2.valid? || !v1.samedirection?(v2)
+          return true if screen_point.distance(pick_on_segment) <= @aperture
+        end
+      }
+      false
     end
 
     # @param [Sketchup::View] view
