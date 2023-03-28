@@ -15,14 +15,14 @@ module Trimble
 
   EXTENSION_ID       = 'su_annotations'.freeze
   EXTENSION_NAME     = 'SketchUp Annotations'.freeze
-  EXTENSION_VERSION  = '1.1.0'.freeze
+  EXTENSION_VERSION  = '1.1.1'.freeze
 
   unless file_loaded?(__FILE__)
     loader = File.join(PATH, 'core.rb')
     ex = SketchupExtension.new(EXTENSION_NAME, loader)
     ex.description = 'Model annotations.'
     ex.version     = EXTENSION_VERSION
-    ex.copyright   = 'Trimble Inc © 2022'
+    ex.copyright   = 'Trimble Inc © 2022-2023'
     ex.creator     = 'SketchUp Team'
     Sketchup.register_extension(ex, true)
   end
